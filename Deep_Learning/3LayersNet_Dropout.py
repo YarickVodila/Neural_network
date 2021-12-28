@@ -3,8 +3,7 @@ np.random.seed(1)
 from keras.datasets import mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-images= (x_train[0:1000].reshape(1000,28*28))
-labels = (255,y_train[0:1000])
+images, labels = (x_train[0:1000].reshape(1000,28*28) / 255, y_train[0:1000])
 test_images = x_test.reshape(len(x_test),28*28)/255
 test_labels = np.zeros((len(y_test),10))
 
@@ -46,5 +45,15 @@ for j in range (iterations):
 
         for i in range (len(test_images)):
             layer_0 = test_images[i:i+1]
-            layer
+            layer_1 = relu(np.dot(layer_0,weights_0_1))
+            layer_2 = np.dot(layer_1,weights_1_2)
 
+            test_error+= np.sum((test_labels[i:i+1]-layer_2)**2)
+            test_correct_cnt+=int(np.argmax(layer_2)== np.argmax(test_labels[i:i+1]))
+
+        sys.stdout.write("\n" + \
+                         "I:" + str(j) + \
+                         " Test-Err:" + str(test_error / float(len(test_images)))[0:5] + \
+                         " Test-Acc:" + str(test_correct_cnt / float(len(test_images))) + \
+                         " Train-Err:" + str(error / float(len(images)))[0:5] + \
+                         " Train-Acc:" + str(correct_cnt / float(len(images))))
